@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Créer un compte - ID Master</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        :root {
+            --bg-body: #f8f9fc;
+            --bg-card: #ffffff;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --border-color: #edf2f7;
+            --accent: #4a5cff;
+            --accent-hover: #3b4be0;
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-body: #0f172a;
+                --bg-card: #1e293b;
+                --text-main: #f1f5f9;
+                --text-muted: #94a3b8;
+                --border-color: #334155;
+            }
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-image: radial-gradient(circle at top right, rgba(74, 92, 255, 0.1), transparent 40%),
+                              radial-gradient(circle at bottom left, rgba(56, 161, 105, 0.1), transparent 40%);
+            padding: 20px;
+        }
+
+        .register-container {
+            background-color: var(--bg-card);
+            padding: 35px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid var(--border-color);
+        }
+
+        .logo-title { text-align: center; margin-bottom: 25px; }
+        .logo-title span { font-size: 40px; display: block; margin-bottom: 5px; }
+        .logo-title h2 { margin: 0; font-size: 24px; color: var(--text-main); }
+        .logo-title p { margin: 5px 0 0 0; font-size: 13px; color: var(--text-muted); }
+
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; font-weight: bold; margin-bottom: 6px; color: var(--text-main); }
+        
+        /* التنسيق التلقائي لفورم جانكو */
+        .form-group input, .form-group select {
+            width: 100%; padding: 12px 15px; border: 1px solid var(--border-color); border-radius: 10px;
+            background: var(--bg-body); color: var(--text-main); font-size: 14px; box-sizing: border-box; outline: none; transition: 0.3s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--accent); box-shadow: 0 0 0 3px rgba(74, 92, 255, 0.15);
+        }
+
+        .btn-submit {
+            width: 100%; padding: 14px; background-color: #38a169; color: white; border: none;
+            border-radius: 12px; font-size: 15px; font-weight: bold; cursor: pointer; transition: 0.3s; margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(56, 161, 105, 0.3);
+        }
+        .btn-submit:hover { background-color: #2f855a; transform: translateY(-2px); }
+
+        .back-login {
+            display: block; text-align: center; margin-top: 20px; font-size: 14px; color: var(--accent);
+            text-decoration: none; font-weight: bold; transition: 0.2s;
+        }
+        .back-login:hover { text-decoration: underline; }
+
+        .errorlist { color: #e53e3e; font-size: 12px; padding-left: 15px; margin: 5px 0 0 0; }
+    </style>
+</head>
+<body>
+
+    <div class="register-container">
+        <div class="logo-title">
+            <span>✨</span>
+            <h2>Créer un compte</h2>
+            <p>Espace Stagiaires - ISFP Infrastructure Digitale</p>
+        </div>
+
+        <form method="POST">
+            {% csrf_token %}
+            
+            <!-- عرض خانات الفورم بشكل أنيق -->
+            {% for field in form %}
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <ul class="errorlist">
+                            {% for error in field.errors %}
+                                <li>{{ error }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn-submit">S'inscrire (En attente d'approbation)</button>
+        </form>
+
+        <a href="{% url 'login' %}" class="back-login">← Retour à la connexion</a>
+    </div>
+
+</body>
+</html>

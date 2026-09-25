@@ -1,0 +1,23 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <h2 style="margin-top: 0; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">📅 Emplois du Temps (ISFP)</h2>
+    <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+        {% for doc in docs %}
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="font-size: 24px;">📅</span>
+                <div>
+                    <div style="font-weight: bold; color: var(--text-main);">{{ doc.title }}</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">Publié le {{ doc.uploaded_at|date:"d M Y" }}</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="{{ doc.file.url }}" target="_blank" style="background: var(--accent); color: white; text-decoration: none; padding: 8px 15px; border-radius: 6px; font-weight: bold;">Télécharger</a>
+                {% if request.user.role == 'admin' or request.user.role == 'professor' %}<a href="{% url 'delete_scolarite' doc.id %}" style="background: #e53e3e; color: white; text-decoration: none; padding: 8px 15px; border-radius: 6px; font-weight: bold;">🗑️</a>{% endif %}
+            </div>
+        </div>
+        {% empty %}<p style="text-align: center; color: var(--text-muted);">Aucun emploi du temps n'est disponible.</p>{% endfor %}
+    </div>
+</div>
+{% endblock %}

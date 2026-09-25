@@ -1,0 +1,29 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.02); border: 1px solid #edf2f7;">
+    <h2 style="margin-top: 0; color: #1a2542; margin-bottom: 25px; border-bottom: 1px solid #edf2f7; padding-bottom: 15px;">Publier un nouveau TP</h2>
+    <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 15px;">
+        {% csrf_token %}
+        <div>
+            <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #4a5568;">Titre du cours/TP *</label>
+            <input type="text" name="title" required style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; outline: none; background: #f8f9fc;">
+        </div>
+        <div>
+            <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #4a5568;">Groupe cible (ex: ID 101)</label>
+            <input type="text" name="group_name" value="ID 101" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; outline: none; background: #f8f9fc;">
+        </div>
+        <div>
+            <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #4a5568;">Description</label>
+            <textarea name="description" rows="4" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; box-sizing: border-box; outline: none; background: #f8f9fc; resize: vertical;"></textarea>
+        </div>
+        <div>
+            <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: #4a5568;">Fichier joint *</label>
+            <input type="file" name="file" required style="width: 100%; padding: 10px; border: 1px dashed #cbd5e0; border-radius: 8px; box-sizing: border-box; outline: none; background: #f8f9fc;">
+        </div>
+        <div style="margin-top: 10px; display: flex; justify-content: flex-end; gap: 10px;">
+            <a href="{% url 'courses_list' %}" style="padding: 12px 20px; background: #edf2f7; color: #4a5568; text-decoration: none; border-radius: 8px; font-weight: bold;">Annuler</a>
+            <button type="submit" style="padding: 12px 25px; background: #38a169; color: white; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Publier</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

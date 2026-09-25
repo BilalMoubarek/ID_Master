@@ -1,0 +1,98 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div class="card" style="margin-bottom: 25px; border-left: 4px solid var(--accent);">
+    <h3 style="margin-top: 0; color: var(--text-main); margin-bottom: 15px;">📂 Publier un Document (Scolarité ISFP)</h3>
+    <form method="POST" action="{% url 'upload_scolarite' %}" enctype="multipart/form-data" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
+        {% csrf_token %}
+        <input type="text" name="title" placeholder="Titre (ex: Emploi ID 101 - Semaine 2)..." required style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; flex: 1; min-width: 200px; background: var(--bg-body); color: var(--text-main);">
+        <select name="doc_type" required style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main);">
+            <option value="emploi">📅 Emploi du temps</option>
+            <option value="resultats">📈 Résultats & Examens</option>
+            <option value="stages">💼 Document de Stage</option>
+        </select>
+        <input type="file" name="file" required style="padding: 10px; background: var(--bg-body); color: var(--text-main); border-radius: 8px;">
+        <button type="submit" style="background: var(--accent); color: white; padding: 10px 20px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Publier</button>
+    </form>
+</div>
+
+<!-- هنا تم الإصلاح: سدينا الـ div اللي جامع العنوان والزر -->
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+    <h2 style="margin: 0; color: var(--text-main);">📊 Tableau de Bord Formateur / Admin</h2>
+    
+    <a href="{% url 'toggle_maintenance' %}" style="background: {% if setting.is_maintenance %}#38a169{% else %}#e53e3e{% endif %}; color: white; padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: bold;">
+        {% if setting.is_maintenance %}🟢 Désactiver Maintenance{% else %}🔴 Activer Maintenance{% endif %}
+    </a>
+</div> <!-- ⬅️ هاد السدة هي اللي كانت ناقصة -->
+
+<div class="card" style="margin-bottom: 25px;">
+    <h3 style="margin-top: 0; color: var(--text-main);">📈 Statistiques de la Plateforme</h3>
+    <div style="height: 300px; width: 100%;">
+        <canvas id="myChart"></canvas>
+    </div>
+</div>
+
+<script>
+    const ctx = document.getElementById('myChart').getContext('2d');
+    const myChart = new Chart(ctx, {
+        type: 'bar', // تقدر تبدلها لـ 'pie' أو 'line'
+        data: {
+            labels: ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'],
+            datasets: [{
+                label: 'Connexions d\'Étudiants',
+                data: [12, 19, 15, 25, 22, 10], // تقدر تجيب هاد الأرقام من Django من بعد
+                backgroundColor: 'rgba(0, 255, 157, 0.2)', // نيون أخضر شفاف
+                borderColor: '#00ff9d',
+                borderWidth: 2,
+                borderRadius: 5
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true, grid: { color: 'rgba(255,255,255,0.05)' } },
+                x: { grid: { display: false } }
+            },
+            plugins: {
+                legend: { labels: { color: '#94a3b8' } }
+            }
+        }
+    });
+</script>
+
+<div class="card">
+    <h3 style="margin-top: 0; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">👨‍🎓 Liste Réelle des Stagiaires</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+        <thead>
+            <tr>
+                <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">CEF</th>
+                <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">Nom Complet</th>
+                <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">Email</th>
+                <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">Statut (En ligne)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in students %}
+            <tr>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: bold;">{{ s.numero_cef|default:"Non renseigné" }}</td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); display: flex; align-items: center; gap: 10px;">
+                    <div style="position: relative;">
+                        <div class="avatar-container" style="width: 30px; height: 30px; font-size: 12px;">{% if s.profile_picture %}<img src="{{ s.profile_picture.url }}">{% else %}{{ s.username|make_list|first|upper }}{% endif %}</div>
+                        {% if s.is_online %}<span class="online-dot" style="width: 8px; height: 8px;"></span>{% endif %}
+                    </div>
+                    {{ s.first_name|default:s.username }} {{ s.last_name }}
+                </td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-muted);">{{ s.email|default:"-" }}</td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color);">
+                    {% if s.is_online %}<span style="color: #38a169; font-size: 12px; font-weight: bold; background: rgba(56,161,105,0.1); padding: 4px 8px; border-radius: 4px;">En ligne</span>
+                    {% else %}<span style="color: #a0aec0; font-size: 12px; background: rgba(160,174,192,0.1); padding: 4px 8px; border-radius: 4px;">Hors ligne</span>{% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4" style="text-align: center; padding: 30px; color: var(--text-muted);">Aucun stagiaire inscrit pour le moment.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<style> @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.5; } 100% { opacity: 1; } } </style>
+{% endblock %}

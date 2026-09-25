@@ -1,0 +1,59 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+    <h2 style="margin: 0; color: var(--text-main);">🎓 Mon Espace ({{ request.user.first_name|default:request.user.username }})</h2>
+    <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 8px; font-weight: bold; color: var(--text-main);">
+        CEF: <span style="color: var(--accent);">{{ request.user.numero_cef|default:"Non renseigné" }}</span>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px;">
+    <!-- Résultats et Modules -->
+    <div class="card">
+        <h3 style="margin-top: 0; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">📚 Mes Modules (Infrastructure Digitale)</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 15px;">
+            <tr>
+                <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">Module</th>
+                <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">Note</th>
+                <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">Statut</th>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: 500;">Routage Cisco (CCNA)</td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: bold;">16.5 / 20</td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"><span style="background: rgba(56, 161, 105, 0.1); color: #38a169; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">Validé</span></td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: 500;">Programmation Python / Django</td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: bold;">18.0 / 20</td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"><span style="background: rgba(56, 161, 105, 0.1); color: #38a169; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">Validé</span></td>
+            </tr>
+            <tr>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main); font-weight: 500;">Système Linux</td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-muted);">En attente</td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color);"><span style="background: rgba(246, 173, 85, 0.1); color: #f6ad55; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: bold;">En cours</span></td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- Absences et Alertes -->
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        <div class="card" style="background: rgba(229, 62, 62, 0.05); border: 1px solid rgba(229, 62, 62, 0.2);">
+            <h3 style="margin-top: 0; color: #e53e3e; margin-bottom: 10px;">⚠️ Bilan des Absences</h3>
+            <div style="font-size: 36px; font-weight: bold; color: #e53e3e;">0 H</div>
+            <p style="color: var(--text-muted); font-size: 13px; margin-top: 5px;">Excellent ! Vous n'avez aucune absence non justifiée.</p>
+        </div>
+        
+        <div class="card">
+            <h3 style="margin-top: 0; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 10px; font-size: 16px;">📅 Emploi du temps (Aujourd'hui)</h3>
+            <div style="padding: 15px 0; border-bottom: 1px solid var(--border-color);">
+                <div style="font-weight: bold; color: var(--text-main);">08:30 - 11:00</div>
+                <div style="color: var(--text-muted); font-size: 14px;">Administration Réseau (Salle 4)</div>
+            </div>
+            <div style="padding: 15px 0;">
+                <div style="font-weight: bold; color: var(--text-main);">14:30 - 17:00</div>
+                <div style="color: var(--text-muted); font-size: 14px;">Développement Web (Labo 2)</div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

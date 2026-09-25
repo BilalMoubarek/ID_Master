@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISFP - ID Master</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700&display=swap');
+        
+        :root {
+            --bg-body: #f3f4f6;
+            --bg-card: rgba(255, 255, 255, 0.85);
+            --text-main: #1f2937;
+            --text-muted: #6b7280;
+            --border-color: rgba(229, 231, 235, 0.5);
+            --sidebar-bg: #111827;
+            --sidebar-hover: #1f2937;
+            --accent: #4f46e5;
+            --header-bg: rgba(255, 255, 255, 0.85);
+            --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.05);
+            --glass-blur: blur(12px);
+        }
+
+        html.dark {
+            --bg-body: #0a0a0f;
+            --bg-card: rgba(16, 20, 29, 0.75);
+            --text-main: #e2e8f0;
+            --text-muted: #94a3b8;
+            --border-color: rgba(51, 65, 85, 0.5);
+            --sidebar-bg: #050508;
+            --sidebar-hover: rgba(0, 255, 157, 0.1);
+            --accent: #00ff9d;
+            --header-bg: rgba(10, 10, 15, 0.85);
+            --shadow-card: 0 8px 32px rgba(0, 255, 157, 0.03);
+        }
+
+        body { font-family: 'Tajawal', sans-serif; background-color: var(--bg-body); color: var(--text-main); margin: 0; display: flex; height: 100vh; overflow: hidden; transition: background-color 0.4s, color 0.4s; }
+        
+        .sidebar { width: 260px; background-color: var(--sidebar-bg); color: white; display: flex; flex-direction: column; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 2px 0 10px rgba(0,0,0,0.1); z-index: 1000; }
+        .sidebar-logo { padding: 25px 20px; text-align: center; font-size: 22px; font-weight: bold; color: var(--accent); border-bottom: 1px solid rgba(255,255,255,0.05); text-shadow: 0 0 10px rgba(0, 255, 157, 0.2); }
+        .sidebar nav { flex: 1; padding-top: 15px; overflow-y: auto; }
+        
+        .section-title { padding: 15px 25px 5px 25px; color: #718096; font-size: 11px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px; }
+        .sidebar nav a { display: flex; align-items: center; padding: 12px 25px; color: #cbd5e0; text-decoration: none; font-size: 15px; transition: 0.2s; }
+        .sidebar nav a:hover { background-color: var(--sidebar-hover); color: var(--accent); border-left: 4px solid var(--accent); }
+        .sidebar nav a span { margin-right: 15px; font-size: 18px; width: 20px; text-align: center; transition: 0.2s; }
+        .sidebar nav a:hover span { transform: scale(1.2); }
+        
+        .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+        
+        .top-nav { background: var(--header-bg); backdrop-filter: var(--glass-blur); height: 70px; display: flex; justify-content: space-between; align-items: center; padding: 0 40px; border-bottom: 1px solid var(--border-color); z-index: 10; position: sticky; top: 0; }
+        .mobile-menu-btn { display: none; background: none; border: none; font-size: 24px; color: var(--text-main); cursor: pointer; }
+        
+        .search-container { position: relative; width: 300px; }
+        .search-bar { width: 100%; padding: 10px 15px 10px 40px; border: 1px solid var(--border-color); border-radius: 20px; background: rgba(0,0,0,0.02); color: var(--text-main); outline: none; transition: 0.3s; box-sizing: border-box; }
+        html.dark .search-bar { background: rgba(255,255,255,0.05); }
+        .search-bar:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(0, 255, 157, 0.2); }
+        .search-icon { position: absolute; left: 15px; top: 12px; color: var(--text-muted); z-index: 2; }
+        
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
+        .content { padding: 30px 40px; animation: fadeInDown 0.5s ease-out forwards; }
+        
+        .card { background: var(--bg-card); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); border-radius: 12px; padding: 25px; box-shadow: var(--shadow-card); transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
+        html.dark .card:hover { box-shadow: 0 12px 40px rgba(0, 255, 157, 0.1); border-color: rgba(0, 255, 157, 0.3); }
+
+        .online-dot { width: 10px; height: 10px; background-color: #38a169; border-radius: 50%; display: inline-block; border: 2px solid var(--bg-card); position: absolute; bottom: 0; right: 0; }
+        .avatar-container { position: relative; width: 40px; height: 40px; border-radius: 50%; background: var(--accent); color: #000; display: flex; justify-content: center; align-items: center; font-weight: bold; overflow: hidden; }
+        
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; height: 100vh; left: -260px; }
+            .sidebar.active { left: 0; }
+            .mobile-menu-btn { display: block; }
+            .search-container { display: none; }
+            .top-nav { padding: 0 20px; }
+            .content { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-logo">🎓 ID-Master</div>
+        <nav>
+            <div class="section-title">Principal</div>
+            {% if request.user.role == 'etudiant' %}
+                <a href="{% url 'student_dashboard' %}"><span>🏠</span> Mon Espace</a>
+            {% else %}
+                <a href="{% url 'dashboard' %}"><span>📊</span> Dashboard Prof</a>
+                <a href="{% url 'stagiaires' %}"><span>👨‍🎓</span> Stagiaires</a>
+                <a href="{% url 'formateurs' %}"><span>👨‍🏫</span> Formateurs</a>
+            {% endif %}
+            
+            <div class="section-title">Pédagogie & LMS</div>
+            <a href="{% url 'courses_list' %}"><span>📚</span> Cours & TPs</a>
+            <a href="{% url 'cahier_texte' %}"><span>📖</span> Cahier de Texte</a>
+            <a href="{% url 'bibliotheque' %}"><span>📗</span> Bibliothèque</a>
+            <a href="{% url 'qr_presence' %}"><span>📷</span> Présence (QR)</a>
+            
+            <div class="section-title">Campus & Social</div>
+            <a href="{% url 'feed' %}"><span>📰</span> Réseau ISFP</a>
+            <a href="{% url 'projets_stagiaires' %}"><span>🚀</span> Projets</a>
+            <a href="{% url 'forum' %}"><span>💬</span> Forum Q&A</a>
+            <a href="{% url 'leaderboard' %}"><span>🏆</span> Classement</a>
+            <a href="{% url 'equipments' %}"><span>🔌</span> Matériel</a>
+            <a href="{% url 'support_tickets' %}"><span>🛠️</span> Support IT</a>
+            
+            <div class="section-title">Scolarité</div>
+            <a href="{% url 'emploi' %}"><span>📅</span> Emplois</a>
+            <a href="{% url 'resultats' %}"><span>📈</span> Résultats</a>
+            <a href="{% url 'stages' %}"><span>💼</span> Stages</a>
+            <a href="{% url 'attestation' %}" target="_blank"><span>📜</span> Attestation</a>
+
+            <div class="section-title">Personnel</div>
+            <a href="{% url 'messages' %}"><span>💬</span> Messages</a>
+            <a href="{% url 'settings' %}"><span>⚙️</span> Paramètres</a>
+            
+            {% if request.user.is_superuser %}
+                <a href="/admin/" target="_blank" style="color: var(--accent); font-weight: bold; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 10px;">
+                    <span>🛡️</span> Django Admin
+                </a>
+            {% endif %}
+            
+            <a href="{% url 'logout' %}" style="margin-top: 20px; border-top: 1px solid rgba(255,255,255,0.05); color: #e53e3e;"><span>🚪</span> Déconnexion</a>
+        </nav>
+    </aside>
+    
+    <div class="main-wrapper">
+        <header class="top-nav">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <button class="mobile-menu-btn" onclick="toggleSidebar()">☰</button>
+                
+                <!-- هاهو الفورم ديال البحث مكلاصي ومقاد ناضي -->
+                <form action="{% url 'global_search' %}" method="GET" class="search-container">
+                    <span class="search-icon">🔍</span>
+                    <input type="text" name="q" value="{{ query }}" class="search-bar" placeholder="Rechercher (cours, forum...)..." required>
+                </form>
+            </div>
+
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <button id="themeToggleBtn" onclick="toggleTheme()" style="background: var(--bg-body); border: 1px solid var(--border-color); color: var(--text-main); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 18px; transition: 0.3s;" title="Cyberpunk / Light Mode">
+                    🌙
+                </button>
+
+                <div style="position: relative;" id="notifContainer">
+                    <div onclick="toggleNotifMenu()" style="position: relative; cursor: pointer; display: flex; align-items: center;" title="Notifications">
+                        <span style="font-size: 24px;">🔔</span>
+                        {% if request.user.is_authenticated and request.user.notifications.all %}
+                            <span style="position: absolute; top: -5px; right: -8px; width: 10px; height: 10px; background: #e53e3e; border-radius: 50%; border: 2px solid var(--header-bg);"></span>
+                        {% endif %}
+                    </div>
+
+                    <div id="notifDropdown" style="display: none; position: absolute; right: 0; top: 45px; width: 320px; background: var(--bg-card); border: 1px solid var(--border-color); backdrop-filter: var(--glass-blur); border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); z-index: 1000; overflow: hidden;">
+                        <div style="padding: 12px 15px; border-bottom: 1px solid var(--border-color); font-weight: bold; display: flex; justify-content: space-between; align-items: center;">
+                            <span>🔔 Notifications</span>
+                            <a href="{% url 'mark_notifications_read' %}" style="font-size: 12px; color: var(--accent); text-decoration: none;">Tout marquer lu</a>
+                        </div>
+                        <div style="max-height: 250px; overflow-y: auto;">
+                            {% for notif in request.user.notifications.all|slice:":5" %}
+                            <div style="padding: 12px 15px; border-bottom: 1px solid var(--border-color); font-size: 13px;">
+                                <div style="font-weight: bold; color: var(--text-main);">{{ notif.message }}</div>
+                                <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">{{ notif.created_at|date:"H:i - d/m" }}</div>
+                            </div>
+                            {% empty %}
+                            <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 13px;">Aucune notification</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="header-brand">
+                    <a href="{% url 'settings' %}" style="display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--text-main); font-weight: 600;">
+                        <div style="position: relative;">
+                            <div class="avatar-container" style="width: 35px; height: 35px;">
+                                {% if request.user.profile_picture %}<img src="{{ request.user.profile_picture.url }}" style="width: 100%; height: 100%; object-fit: cover;">{% else %}{{ request.user.username|make_list|first|upper }}{% endif %}
+                            </div>
+                            <span class="online-dot"></span>
+                        </div>
+                        <span class="desktop-name">{{ request.user.first_name|default:request.user.username }}</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+        
+        <main class="content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <script>
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('active');
+        }
+
+        function toggleNotifMenu() {
+            var menu = document.getElementById("notifDropdown");
+            menu.style.display = (menu.style.display === "block") ? "none" : "block";
+        }
+
+        window.onclick = function(event) {
+            if (!event.target.closest('#notifContainer')) {
+                var menu = document.getElementById('notifDropdown');
+                if (menu) menu.style.display = 'none';
+            }
+            if (!event.target.closest('.sidebar') && !event.target.closest('.mobile-menu-btn')) {
+                document.getElementById('sidebar').classList.remove('active');
+            }
+        }
+
+        const htmlElement = document.documentElement;
+        const themeBtn = document.getElementById("themeToggleBtn");
+        const savedTheme = localStorage.getItem("theme");
+        const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+        if (savedTheme === "dark" || (!savedTheme && systemPrefersDark)) {
+            htmlElement.classList.add("dark");
+            if(themeBtn) themeBtn.textContent = "☀️";
+        } else {
+            htmlElement.classList.remove("dark");
+            if(themeBtn) themeBtn.textContent = "🌙";
+        }
+
+        function toggleTheme() {
+            if (htmlElement.classList.contains("dark")) {
+                htmlElement.classList.remove("dark");
+                localStorage.setItem("theme", "light");
+                if(themeBtn) themeBtn.textContent = "🌙";
+            } else {
+                htmlElement.classList.add("dark");
+                localStorage.setItem("theme", "dark");
+                if(themeBtn) themeBtn.textContent = "☀️";
+            }
+        }
+    </script>
+</body>
+</html>

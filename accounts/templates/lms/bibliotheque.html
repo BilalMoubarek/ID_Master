@@ -1,0 +1,29 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 20px;">
+    <div class="card">
+        <h2 style="margin: 0; color: var(--text-main);">📚 Bibliothèque Numérique & TPs</h2>
+        <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 13px;">Supports de cours officiels, modules Cisco CCNA, et documentations Linux.</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px;">
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <span style="font-size: 30px;">📘</span>
+                <h3 style="margin: 10px 0 5px 0; color: var(--text-main); font-size: 16px;">CCNA 1 - Introduction to Networks</h3>
+                <p style="color: var(--text-muted); font-size: 12px; margin: 0;">Support officiel Cisco Packet Tracer & Routing.</p>
+            </div>
+            <a href="#" style="margin-top: 15px; display: inline-block; background: var(--accent); color: white; text-align: center; padding: 8px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold;">Télécharger PDF 📥</a>
+        </div>
+
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <span style="font-size: 30px;">🐧</span>
+                <h3 style="margin: 10px 0 5px 0; color: var(--text-main); font-size: 16px;">Administration Linux Ubuntu</h3>
+                <p style="color: var(--text-muted); font-size: 12px; margin: 0;">Commandes CLI, Permissions, et Gestion Réseau.</p>
+            </div>
+            <a href="#" style="margin-top: 15px; display: inline-block; background: var(--accent); color: white; text-align: center; padding: 8px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold;">Télécharger PDF 📥</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

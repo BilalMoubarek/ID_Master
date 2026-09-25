@@ -1,0 +1,56 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+    <h2 style="margin: 0; color: var(--text-main);">👨‍🎓 Liste des Stagiaires (ISFP)</h2>
+</div>
+
+<div class="card">
+    <table style="width: 100%; border-collapse: collapse;">
+        <thead>
+            <tr>
+                <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">CEF / Nom Complet</th>
+                <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">Statut</th>
+                <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">Total Absences</th>
+                {% if request.user.role == 'admin' or request.user.role == 'professor' %}
+                <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">Action (Ajouter Absence)</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in stagiaires %}
+            <tr>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color);">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <div class="avatar-container" style="width: 35px; height: 35px; font-size: 14px;">{% if s.profile_picture %}<img src="{{ s.profile_picture.url }}">{% else %}{{ s.username|make_list|first|upper }}{% endif %}</div>
+                        <div>
+                            <div style="font-weight: bold; color: var(--text-main);">{{ s.first_name|default:s.username }} {{ s.last_name }}</div>
+                            <div style="font-size: 12px; color: var(--text-muted);">CEF: {{ s.numero_cef|default:"-" }}</div>
+                        </div>
+                    </div>
+                </td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color);">
+                    {% if s.is_online %}<span style="color: #38a169; font-size: 12px; font-weight: bold; background: rgba(56,161,105,0.1); padding: 4px 8px; border-radius: 4px;">En ligne</span>
+                    {% else %}<span style="color: #a0aec0; font-size: 12px; background: rgba(160,174,192,0.1); padding: 4px 8px; border-radius: 4px;">Hors ligne</span>{% endif %}
+                </td>
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: #e53e3e; font-weight: bold;">
+                    {{ s.total_absences|default:0 }} Heures
+                </td>
+                
+                {% if request.user.role == 'admin' or request.user.role == 'professor' %}
+                <td style="padding: 12px; border-bottom: 1px solid var(--border-color);">
+                    <form method="POST" action="{% url 'add_absence' %}" style="display: flex; gap: 5px;">
+                        {% csrf_token %}
+                        <input type="hidden" name="student_id" value="{{ s.id }}">
+                        <input type="number" name="heures" placeholder="H" required style="width: 50px; padding: 5px; border: 1px solid var(--border-color); border-radius: 4px;">
+                        <input type="text" name="module" placeholder="Module" required style="width: 100px; padding: 5px; border: 1px solid var(--border-color); border-radius: 4px;">
+                        <input type="date" name="date_abs" required style="padding: 5px; border: 1px solid var(--border-color); border-radius: 4px;">
+                        <button type="submit" style="background: #e53e3e; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-weight: bold;">+ Abs</button>
+                    </form>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

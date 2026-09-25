@@ -1,0 +1,79 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="max-width: 680px; margin: 0 auto;">
+    
+    {% if request.user.role != 'etudiant' %}
+    <div class="card" style="margin-bottom: 25px;">
+        <div style="display: flex; gap: 15px;">
+            <div class="avatar-container">{% if request.user.profile_picture %}<img src="{{ request.user.profile_picture.url }}">{% else %}{{ request.user.username|make_list|first|upper }}{% endif %}</div>
+            <form method="POST" enctype="multipart/form-data" style="flex: 1;">
+                {% csrf_token %}
+                <textarea name="content" rows="3" placeholder="Partagez une annonce avec vos groupes..." required style="width: 100%; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main); outline: none; resize: none; font-family: inherit;"></textarea>
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 15px;">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <label style="cursor: pointer; color: var(--accent); font-weight: bold; font-size: 14px; background: rgba(74, 92, 255, 0.1); padding: 8px 12px; border-radius: 6px;">
+                            📷 Photo
+                            <input type="file" name="image" accept="image/*" style="display: none;">
+                        </label>
+                        <select name="expire_in" style="padding: 8px; border-radius: 6px; border: 1px solid var(--border-color); background: var(--bg-body); color: var(--text-main); outline: none;">
+                            <option value="never">Permanent</option>
+                            <option value="2days">Supprimer dans 2 jours</option>
+                        </select>
+                    </div>
+                    <button type="submit" style="background: var(--accent); color: white; padding: 10px 25px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;">Publier</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endif %}
+
+    <div style="display: flex; flex-direction: column; gap: 20px;">
+        {% for post in announcements %}
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 15px;">
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <div style="position: relative;">
+                        <div class="avatar-container" style="width: 45px; height: 45px;">
+                            {% if post.author.profile_picture %}<img src="{{ post.author.profile_picture.url }}">{% else %}{{ post.author.username|make_list|first|upper }}{% endif %}
+                        </div>
+                        {% if post.author.is_online %}<span class="online-dot"></span>{% endif %}
+                    </div>
+                    <div>
+                        <div style="font-weight: bold; font-size: 16px; color: var(--text-main);">{{ post.author.first_name|default:post.author.username }} {{ post.author.last_name }} <span style="font-size: 12px; color: var(--accent); background: rgba(74, 92, 255, 0.1); padding: 2px 6px; border-radius: 4px; margin-left: 5px;">Formateur</span></div>
+                        <div style="font-size: 12px; color: var(--text-muted);">{{ post.created_at|date:"d M Y à H:i" }}</div>
+                    </div>
+                </div>
+                <!-- زر الحذف للأستاذ -->
+                {% if request.user == post.author or request.user.is_superuser %}
+                <form method="POST" action="{% url 'delete_announcement' post.id %}" onsubmit="return confirm('Supprimer ce post ?');">
+                    {% csrf_token %}
+                    <button type="submit" style="background: transparent; border: none; color: #fc8181; cursor: pointer; font-size: 18px;" title="Supprimer">🗑️</button>
+                </form>
+                {% endif %}
+            </div>
+            
+            <div style="color: var(--text-main); line-height: 1.6; font-size: 15px; margin-bottom: 15px;">
+                {{ post.content|linebreaks }}
+            </div>
+            
+            {% if post.image %}
+            <div style="border-radius: 8px; overflow: hidden; margin-top: 10px; border: 1px solid var(--border-color);">
+                <img src="{{ post.image.url }}" style="width: 100%; display: block;">
+            </div>
+            {% endif %}
+            
+            {% if post.expires_at %}
+            <div style="margin-top: 15px; font-size: 12px; color: #e53e3e; background: rgba(229, 62, 62, 0.1); padding: 5px 10px; border-radius: 5px; display: inline-block;">
+                ⏳ Annonce temporaire (2 jours)
+            </div>
+            {% endif %}
+        </div>
+        {% empty %}
+        <div class="card" style="text-align: center; padding: 40px; color: var(--text-muted);">
+            <span style="font-size: 40px; display: block; margin-bottom: 10px;">📭</span>
+            Le mur est vide.
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

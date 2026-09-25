@@ -1,0 +1,52 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+    <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 style="margin: 0; color: var(--text-main);">🚀 Projets Stagiaires</h2>
+            <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 13px;">Découvrez les réalisations et projets de fin d'études du campus.</p>
+        </div>
+    </div>
+
+    <!-- فورم إضافة مشروع جديد -->
+    <div class="card">
+        <h3 style="margin-top: 0; color: var(--text-main);">➕ Partager un projet</h3>
+        <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 10px;">
+            {% csrf_token %}
+            <div style="display: flex; gap: 10px;">
+                <input type="text" name="title" placeholder="Titre du projet" required style="flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main);">
+                <input type="text" name="students" placeholder="Réalisé par (ex: Bilal, Fati...)" required style="flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main);">
+            </div>
+            <textarea name="description" placeholder="Description du projet..." rows="3" required style="padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main); resize: none;"></textarea>
+            <div style="display: flex; gap: 10px;">
+                <input type="url" name="github_link" placeholder="Lien GitHub / Repo (Optionnel)" style="flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main);">
+                <input type="file" name="image" accept="image/*" style="padding: 7px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main);">
+            </div>
+            <button type="submit" style="align-self: flex-end; background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">Publier le projet</button>
+        </form>
+    </div>
+
+    <!-- شبكة عرض المشاريع -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+        {% for projet in projets %}
+        <div class="card" style="display: flex; flex-direction: column; gap: 10px; padding: 15px;">
+            {% if projet.image %}
+                <img src="{{ projet.image.url }}" style="width: 100%; height: 180px; object-fit: cover; border-radius: 8px;">
+            {% else %}
+                <div style="width: 100%; height: 180px; background: var(--border-color); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 40px;">💻</div>
+            {% endif %}
+            
+            <h3 style="margin: 5px 0; color: var(--text-main);">{{ projet.title }}</h3>
+            <div style="font-size: 12px; color: var(--text-muted);">👨‍💻 Par: <b>{{ projet.students }}</b></div>
+            <p style="font-size: 13px; color: var(--text-main); line-height: 1.5; margin: 5px 0; flex-grow: 1;">{{ projet.description }}</p>
+            
+            {% if projet.github_link %}
+            <a href="{{ projet.github_link }}" target="_blank" style="margin-top: 10px; display: inline-block; background: #24292e; color: white; text-align: center; padding: 8px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: bold;">🔗 Voir sur GitHub</a>
+            {% endif %}
+        </div>
+        {% empty %}
+        <div style="grid-column: 1 / -1; text-align: center; color: var(--text-muted); padding: 20px;">Aucun projet partagé pour le moment.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

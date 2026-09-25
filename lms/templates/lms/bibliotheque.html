@@ -1,0 +1,33 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 20px; max-width: 1000px; margin: 0 auto;">
+    <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 style="margin: 0; color: var(--text-main);">📚 Bibliothèque Numérique - ID Master</h2>
+            <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 13px;">Ressources officielles, modules Cisco CCNA et manuels d'administration.</p>
+        </div>
+    </div>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+        <!-- Livre 1 -->
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between; transition: transform 0.2s;">
+            <div>
+                <div style="font-size: 40px; text-align: center; padding: 20px; background: rgba(74, 92, 255, 0.1); border-radius: 8px; margin-bottom: 15px;">📘</div>
+                <h3 style="margin: 0 0 5px 0; color: var(--text-main); font-size: 16px;">CCNA 1 - Introduction to Networks</h3>
+                <p style="color: var(--text-muted); font-size: 12px; margin: 0;">Support officiel Cisco Packet Tracer & Notions de routage IPv4/IPv6.</p>
+            </div>
+            <a href="#" style="margin-top: 20px; display: block; background: var(--accent); color: white; text-align: center; padding: 10px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold;">Télécharger PDF 📥</a>
+        </div>
+
+        <!-- Livre 2 -->
+        <div class="card" style="display: flex; flex-direction: column; justify-content: space-between;">
+            <div>
+                <div style="font-size: 40px; text-align: center; padding: 20px; background: rgba(56, 161, 105, 0.1); border-radius: 8px; margin-bottom: 15px;">🐧</div>
+                <h3 style="margin: 0 0 5px 0; color: var(--text-main); font-size: 16px;">Administration Linux Ubuntu</h3>
+                <p style="color: var(--text-muted); font-size: 12px; margin: 0;">Commandes CLI, Permissions, Gestion des paquets et Serveurs.</p>
+            </div>
+            <a href="#" style="margin-top: 20px; display: block; background: #38a169; color: white; text-align: center; padding: 10px; border-radius: 6px; text-decoration: none; font-size: 13px; font-weight: bold;">Télécharger PDF 📥</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

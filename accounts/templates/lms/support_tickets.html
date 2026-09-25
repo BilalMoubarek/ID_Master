@@ -1,0 +1,34 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+    <div class="card">
+        <h2 style="margin: 0; color: var(--text-main);">🛠️ Support Technique & IT Ticketing</h2>
+        <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 13px;">Signalez un problème matériel (PC, Projecteur, Connexion) dans les salles ISFP.</p>
+    </div>
+
+    <div class="card">
+        <h3 style="margin-top: 0; color: var(--text-main);">Ouvrir un Ticket</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="text" name="subject" placeholder="Sujet (ex: Connexion Wi-Fi salle 4 en panne)" required style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main); margin-bottom: 10px; box-sizing: border-box;">
+            <textarea name="description" placeholder="Description détaillée du problème..." rows="3" required style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main); resize: none; box-sizing: border-box;"></textarea>
+            <button type="submit" style="margin-top: 10px; background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">Envoyer le Ticket</button>
+        </form>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 15px;">
+        {% for ticket in tickets %}
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="margin: 0; color: var(--text-main); font-size: 16px;">{{ ticket.subject }}</h3>
+                <span style="font-size: 12px; padding: 4px 10px; border-radius: 20px; background: {% if ticket.status == 'Résolu' %}rgba(56, 161, 105, 0.1); color: #38a169;{% else %}rgba(246, 173, 85, 0.1); color: #f6ad55;{% endif %} font-weight: bold;">{{ ticket.status }}</span>
+            </div>
+            <p style="color: var(--text-muted); font-size: 13px; margin: 10px 0;">{{ ticket.description }}</p>
+            <div style="font-size: 11px; color: var(--text-muted);">Par <b>{{ ticket.student.username }}</b> le {{ ticket.created_at|date:"d/m/Y à H:i" }}</div>
+        </div>
+        {% empty %}
+        <div class="card" style="text-align: center; color: var(--text-muted);">Aucun ticket de support actif.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

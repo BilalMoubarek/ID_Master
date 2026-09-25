@@ -1,0 +1,32 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+    
+    <div class="card">
+        <h3 style="margin-top: 0; color: var(--text-main);">💬 Partager avec le Campus ISFP</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <textarea name="post_content" placeholder="Posez une question sur le Réseau, Linux, Django..." rows="3" required style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 10px; background: var(--bg-body); color: var(--text-main); outline: none; box-sizing: border-box; resize: none;"></textarea>
+            <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                <button type="submit" style="background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">Publier ➤</button>
+            </div>
+        </form>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 15px;">
+        <div class="card">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+                <div class="avatar-container" style="width: 35px; height: 35px;">BM</div>
+                <div>
+                    <div style="font-weight: bold; color: var(--text-main); font-size: 14px;">Bilal Moubarek</div>
+                    <div style="font-size: 11px; color: var(--text-muted);">Il y a 10 minutes</div>
+                </div>
+            </div>
+            <p style="color: var(--text-main); font-size: 14px; line-height: 1.5;">
+                Salut tout le monde ! Est-ce que quelqu'un a réussi à configurer le routage statique sur Cisco Packet Tracer pour le TP de demain ? 🌐
+            </p>
+        </div>
+    </div>
+
+</div>
+{% endblock %}

@@ -1,0 +1,46 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <h2 style="margin-top: 0; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">💼 Espace Stages & Insertion</h2>
+    
+    <p style="color: var(--text-main); line-height: 1.6;">Cet espace contient tous les documents nécessaires pour la recherche et la validation de votre stage de fin de formation (PFE).</p>
+
+    <div style="display: flex; flex-direction: column; gap: 15px; margin-top: 20px;">
+        <!-- Document 1 -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="font-size: 24px;">📄</span>
+                <div>
+                    <div style="font-weight: bold; color: var(--text-main);">Demande de Stage (Modèle)</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">Format Word (.docx)</div>
+                </div>
+            </div>
+            <button style="background: #edf2f7; color: #2d3748; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;">Télécharger</button>
+        </div>
+
+        <!-- Document 2 -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="font-size: 24px;">📝</span>
+                <div>
+                    <div style="font-weight: bold; color: var(--text-main);">Convention de Stage OFPPT</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">À remplir et faire signer par l'entreprise</div>
+                </div>
+            </div>
+            <button style="background: #edf2f7; color: #2d3748; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;">Télécharger</button>
+        </div>
+
+        <!-- Document 3 -->
+        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border: 1px solid var(--border-color); border-radius: 8px;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <span style="font-size: 24px;">📘</span>
+                <div>
+                    <div style="font-weight: bold; color: var(--text-main);">Canevas du Rapport de Stage</div>
+                    <div style="font-size: 12px; color: var(--text-muted);">Format PDF - Structure exigée pour le PFE</div>
+                </div>
+            </div>
+            <button style="background: #edf2f7; color: #2d3748; border: none; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-weight: bold;">Télécharger</button>
+        </div>
+    </div>
+</div>
+{% endblock %}

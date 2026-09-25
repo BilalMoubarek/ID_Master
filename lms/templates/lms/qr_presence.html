@@ -1,0 +1,19 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="max-width: 600px; margin: 0 auto; text-align: center;" class="card">
+    <h2 style="margin-top: 0;">📷 Pointage par QR Code</h2>
+    <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Scannez ce QR Code avec votre smartphone pour enregistrer votre présence instantanément sur la plateforme ID-Master.</p>
+    
+    <div style="margin: 0 auto 30px auto; background: white; padding: 20px; display: inline-block; border-radius: 12px; border: 2px dashed var(--border-color);">
+        <!-- beddelna l-API hna l QuickChart -->
+        <img src="https://quickchart.io/qr?text=http://127.0.0.1:8000/absences/add/&size=250&margin=2" alt="QR Code ISFP" style="width: 250px; height: 250px; display: block;">
+    </div>
+
+    <div>
+        <form method="POST" action="{% url 'add_absence' %}">
+            {% csrf_token %}
+            <button type="submit" style="background: #38a169; color: white; border: none; padding: 12px 30px; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 15px; width: 100%; box-sizing: border-box;">✅ Pointer manuellement (Professeur)</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

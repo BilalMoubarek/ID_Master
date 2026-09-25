@@ -1,0 +1,64 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="max-width: 800px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+    
+    <div class="card" style="text-align: center; background: linear-gradient(135deg, #1a2542 0%, #2a3759 100%); color: white; border: none;">
+        <h2 style="margin: 0;">🏆 Classement ID-Master</h2>
+        <p style="margin: 5px 0 0 0; font-size: 14px; opacity: 0.8;">Découvrez les meilleurs talents de l'Infrastructure Digitale.</p>
+    </div>
+
+    <div class="card" style="padding: 0; overflow: hidden;">
+        <table style="width: 100%; border-collapse: collapse; text-align: left;">
+            <thead>
+                <tr style="background: rgba(74, 92, 255, 0.05); border-bottom: 2px solid var(--border-color);">
+                    <th style="padding: 15px 20px; color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Rang</th>
+                    <th style="padding: 15px 20px; color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Stagiaire</th>
+                    <th style="padding: 15px 20px; color: var(--text-muted); font-size: 12px; text-transform: uppercase;">Badges</th>
+                    <th style="padding: 15px 20px; color: var(--text-muted); font-size: 12px; text-transform: uppercase; text-align: right;">Points</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for score in leaderboard %}
+                <tr style="border-bottom: 1px solid var(--border-color); transition: 0.2s; background: {% if score.student == request.user %}rgba(74, 92, 255, 0.05){% else %}transparent{% endif %};">
+                    
+                    <td style="padding: 15px 20px; font-size: 18px; font-weight: bold; color: var(--text-main);">
+                        {% if forloop.counter == 1 %}🥇
+                        {% elif forloop.counter == 2 %}🥈
+                        {% elif forloop.counter == 3 %}🥉
+                        {% else %}<span style="color: var(--text-muted); font-size: 15px;">#{{ forloop.counter }}</span>{% endif %}
+                    </td>
+                    
+                    <td style="padding: 15px 20px; display: flex; align-items: center; gap: 10px;">
+                        <div style="width: 35px; height: 35px; border-radius: 50%; background: var(--accent); color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px;">
+                            {{ score.student.username|make_list|first|upper }}
+                        </div>
+                        <div style="font-weight: bold; color: var(--text-main);">
+                            {{ score.student.first_name|default:score.student.username }} {{ score.student.last_name }}
+                            {% if score.student == request.user %} <span style="font-size: 10px; color: var(--accent);">(Vous)</span> {% endif %}
+                        </div>
+                    </td>
+                    
+                    <td style="padding: 15px 20px; color: var(--text-main); font-size: 13px;">
+                        {% if score.badges %}
+                            {% for badge in score.badges|slice:"," %}
+                                <span style="background: rgba(56, 161, 105, 0.1); color: #38a169; padding: 3px 8px; border-radius: 12px; font-weight: bold; margin-right: 5px;">{{ badge }}</span>
+                            {% endfor %}
+                        {% else %}
+                            <span style="color: var(--text-muted); font-size: 11px;">En cours...</span>
+                        {% endif %}
+                    </td>
+                    
+                    <td style="padding: 15px 20px; font-weight: bold; color: var(--accent); text-align: right; font-size: 16px;">
+                        {{ score.points }} <span style="font-size: 12px; color: var(--text-muted);">XP</span>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="4" style="text-align: center; padding: 20px; color: var(--text-muted);">Aucun classement disponible.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

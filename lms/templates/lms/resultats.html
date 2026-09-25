@@ -1,0 +1,28 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <h2 style="margin-top: 0; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">📈 Résultats & Calendrier des Examens</h2>
+
+    <h3 style="color: var(--text-main);">📌 Calendrier des Contrôles Continus</h3>
+    <table style="width: 100%; border-collapse: collapse; margin-bottom: 30px;">
+        <tr>
+            <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">Module</th>
+            <th style="text-align: left; padding: 12px; border-bottom: 2px solid var(--border-color); color: var(--text-muted);">Date Prévue</th>
+        </tr>
+        <tr>
+            <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main);">Préparation EFM (Fin de Module)</td>
+            <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main);">À déterminer</td>
+        </tr>
+        <tr>
+            <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main);">Examen de Fin de Formation (EFF)</td>
+            <td style="padding: 12px; border-bottom: 1px solid var(--border-color); color: var(--text-main);">Juin 2027</td>
+        </tr>
+    </table>
+
+    <h3 style="color: var(--text-main);">🏆 Résultats d'Affichage</h3>
+    <div style="border: 1px dashed var(--border-color); padding: 30px; text-align: center; border-radius: 8px;">
+        <span style="font-size: 30px; display: block; margin-bottom: 10px;">📊</span>
+        <p style="color: var(--text-muted); margin: 0;">Aucun résultat (Passage / Diplôme) n'est affiché pour le moment.</p>
+    </div>
+</div>
+{% endblock %}

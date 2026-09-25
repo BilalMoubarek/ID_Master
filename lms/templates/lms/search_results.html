@@ -1,0 +1,52 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+    
+    <div class="card">
+        <h2 style="margin: 0; color: var(--text-main);">🔍 Résultats de recherche</h2>
+        <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 14px;">Recherche pour : <b style="color: var(--accent);">"{{ query }}"</b></p>
+    </div>
+
+    <!-- نتائج الدروس -->
+    {% if courses %}
+    <div class="card">
+        <h3 style="margin-top: 0; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">📚 Cours & TPs trouvés</h3>
+        <ul style="padding-left: 20px; margin: 10px 0;">
+            {% for c in courses %}
+            <li style="margin-bottom: 8px;"><a href="{% url 'courses_list' %}" style="color: var(--accent); font-weight: bold; text-decoration: none;">{{ c.title }}</a> - <span style="font-size: 13px; color: var(--text-muted);">{{ c.description|truncatechars:60 }}</span></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- نتائج المنتدى -->
+    {% if questions %}
+    <div class="card">
+        <h3 style="margin-top: 0; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">💬 Forum Q&A</h3>
+        <ul style="padding-left: 20px; margin: 10px 0;">
+            {% for q in questions %}
+            <li style="margin-bottom: 8px;"><a href="{% url 'forum_detail' q.id %}" style="color: var(--accent); font-weight: bold; text-decoration: none;">{{ q.title }}</a></li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    <!-- نتائج المشاريع -->
+    {% if projets %}
+    <div class="card">
+        <h3 style="margin-top: 0; color: var(--text-main); border-bottom: 1px solid var(--border-color); padding-bottom: 10px;">🚀 Projets Étudiants</h3>
+        <ul style="padding-left: 20px; margin: 10px 0;">
+            {% for p in projets %}
+            <li style="margin-bottom: 8px;"><b style="color: var(--text-main);">{{ p.title }}</b> (Par {{ p.students }})</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+    {% if not courses and not questions and not projets %}
+    <div class="card" style="text-align: center; color: var(--text-muted); padding: 40px;">
+        Aucun résultat trouvé pour "{{ query }}". Essayez un autre mot-clé.
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

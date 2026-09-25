@@ -1,0 +1,37 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div class="card" style="max-width: 600px; margin: 0 auto;">
+    <h2 style="margin-top: 0; color: var(--text-main); margin-bottom: 25px; border-bottom: 1px solid var(--border-color); padding-bottom: 15px;">⚙️ Paramètres du Profil</h2>
+    
+    <form method="POST" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 20px;">
+        {% csrf_token %}
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <div class="avatar-container" style="width: 80px; height: 80px; font-size: 30px;">
+                {% if request.user.profile_picture %}<img src="{{ request.user.profile_picture.url }}">{% else %}{{ request.user.username|make_list|first|upper }}{% endif %}
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 5px; font-weight: 500; color: var(--text-main);">Changer l'avatar</label>
+                <input type="file" name="profile_picture" accept="image/*" style="color: var(--text-main);">
+            </div>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: var(--text-main);">Prénom</label>
+                <input type="text" name="first_name" value="{{ request.user.first_name }}" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main); outline: none;">
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: var(--text-main);">Nom</label>
+                <input type="text" name="last_name" value="{{ request.user.last_name }}" style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main); outline: none;">
+            </div>
+        </div>
+
+        <div>
+            <label style="display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: var(--text-main);">Numéro CEF (Inscription)</label>
+            <input type="text" name="numero_cef" value="{{ request.user.numero_cef|default:'' }}" placeholder="Ex: 2026/..." style="width: 100%; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main); outline: none;">
+        </div>
+
+        <button type="submit" style="background: #38a169; color: white; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 16px;">Enregistrer les modifications</button>
+    </form>
+</div>
+{% endblock %}

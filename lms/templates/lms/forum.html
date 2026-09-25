@@ -1,0 +1,31 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+    
+    <div class="card">
+        <h2 style="margin-top: 0; color: var(--text-main);">💬 Forum Q&A - ID Master</h2>
+        <form method="POST" style="display: flex; flex-direction: column; gap: 10px;">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Titre de votre question (ex: Problème routage OSPF)" required style="padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main);">
+            <textarea name="content" placeholder="Détaillez votre question ici..." rows="3" required style="padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main); resize: none;"></textarea>
+            <button type="submit" style="align-self: flex-end; background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">Poser la question 🚀</button>
+        </form>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 15px;">
+        {% for q in questions %}
+        <div class="card" style="padding: 15px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h3 style="margin: 0 0 5px 0;"><a href="{% url 'forum_detail' q.id %}" style="color: var(--text-main); text-decoration: none;">{{ q.title }}</a></h3>
+                <div style="font-size: 12px; color: var(--text-muted);">👤 {{ q.author.username }} • 🕒 {{ q.created_at|date:"d M Y, H:i" }}</div>
+            </div>
+            <div style="background: var(--bg-body); padding: 8px 15px; border-radius: 20px; font-size: 13px; font-weight: bold; color: var(--accent);">
+                {{ q.answers.count }} Réponses
+            </div>
+        </div>
+        {% empty %}
+        <p style="text-align: center; color: var(--text-muted);">Aucune question pour le moment. Soyez le premier !</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

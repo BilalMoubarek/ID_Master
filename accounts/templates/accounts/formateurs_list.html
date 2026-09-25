@@ -1,0 +1,58 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="display: flex; flex-direction: column; gap: 25px;">
+    
+    <!-- رأس الصفحة -->
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h1 style="margin: 0; color: var(--text-main); font-size: 24px;">👨‍🏫 Corps Professoral - ISFP</h1>
+            <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 14px;">Liste des formateurs et encadrants de la filière Infrastructure Digitale.</p>
+        </div>
+    </div>
+
+    <!-- شبكة عرض الأساتذة -->
+    <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px;">
+        {% for prof in formateurs %}
+        <div class="card" style="display: flex; flex-direction: column; align-items: center; text-align: center; position: relative; overflow: hidden;">
+            
+            <!-- خلفية زخرفية مصغرة فوق الكارد -->
+            <div style="position: absolute; top: 0; left: 0; width: 100%; height: 60px; background: linear-gradient(135deg, var(--accent), #f6ad55); z-index: 1;"></div>
+            
+            <!-- الصورة أو الحرف الأول -->
+            <div class="avatar-container" style="width: 75px; height: 75px; font-size: 28px; z-index: 2; margin-top: 20px; border: 4px solid var(--bg-card); box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                {% if prof.profile_picture %}
+                    <img src="{{ prof.profile_picture.url }}" style="width: 100%; height: 100%; object-fit: cover;">
+                {% else %}
+                    {{ prof.username|make_list|first|upper }}
+                {% endif %}
+            </div>
+
+            <!-- معلومات الأستاذ -->
+            <div style="margin-top: 15px; z-index: 2; width: 100%;">
+                <h3 style="margin: 0; color: var(--text-main); font-size: 18px;">{{ prof.first_name|default:prof.username }} {{ prof.last_name }}</h3>
+                <span style="display: inline-block; background: rgba(74, 92, 255, 0.1); color: var(--accent); padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: bold; margin-top: 6px;">Formateur ISFP</span>
+                
+                <div style="margin-top: 15px; font-size: 13px; color: var(--text-muted); display: flex; flex-direction: column; gap: 5px; text-align: left; padding: 0 10px;">
+                    <div>📧 <b>Email:</b> {{ prof.email|default:"Non spécifié" }}</div>
+                    <div>📱 <b>Rôle:</b> Formateur Principal</div>
+                </div>
+
+                <!-- أزرار الإجراءات (مراسلة الأستاذ) -->
+                <div style="margin-top: 20px; display: flex; gap: 10px; justify-content: center;">
+                    <a href="{% url 'chat' prof.id %}" style="background: var(--accent); color: white; text-decoration: none; padding: 8px 16px; border-radius: 8px; font-size: 13px; font-weight: bold; display: flex; align-items: center; gap: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); transition: 0.2s;">
+                        <span>💬</span> Contacter
+                    </a>
+                </div>
+            </div>
+
+        </div>
+        {% empty %}
+        <div class="card" style="grid-column: 1 / -1; text-align: center; padding: 40px; color: var(--text-muted);">
+            <span style="font-size: 40px;">👨‍🏫</span>
+            <p style="margin-top: 10px; font-size: 15px;">Aucun formateur enregistré pour le moment.</p>
+        </div>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}

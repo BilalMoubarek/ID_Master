@@ -1,0 +1,76 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+    
+    <div class="card">
+        <h2 style="margin: 0; color: var(--text-main);">🔌 Réservation de Matériel IT</h2>
+        <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 13px;">Réservez des routeurs, switchs, ou câbles pour vos TPs (Retour obligatoire à la date prévue).</p>
+    </div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- ليستة الماتيريال اللي كاين -->
+        <div class="card" style="display: flex; flex-direction: column; gap: 15px;">
+            <h3 style="margin-top: 0; color: var(--text-main);">🛒 Matériel Disponible</h3>
+            {% for equip in equipments %}
+            <div style="padding: 15px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                    <b style="color: var(--text-main);">{{ equip.name }}</b>
+                    <span style="background: rgba(56, 161, 105, 0.1); color: #38a169; padding: 2px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;">
+                        {{ equip.available_quantity }} / {{ equip.total_quantity }} Dispo
+                    </span>
+                </div>
+                <div style="font-size: 12px; color: var(--text-muted);">{{ equip.description }}</div>
+            </div>
+            {% empty %}
+            <p style="color: var(--text-muted); font-size: 13px;">Aucun équipement disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <!-- فورم الحجز -->
+            <div class="card">
+                <h3 style="margin-top: 0; color: var(--text-main);">➕ Faire une demande</h3>
+                <form method="POST" style="display: flex; flex-direction: column; gap: 10px;">
+                    {% csrf_token %}
+                    <select name="equipment_id" required style="padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main);">
+                        <option value="" disabled selected>Sélectionnez un équipement...</option>
+                        {% for equip in equipments %}
+                            {% if equip.available_quantity > 0 %}
+                                <option value="{{ equip.id }}">{{ equip.name }}</option>
+                            {% endif %}
+                        {% endfor %}
+                    </select>
+                    
+                    <label style="font-size: 12px; color: var(--text-muted);">Date de retour prévue :</label>
+                    <input type="date" name="expected_return" required style="padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main);">
+                    
+                    <button type="submit" style="background: var(--accent); color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer;">Demander l'équipement</button>
+                </form>
+            </div>
+
+            <!-- تاريخ الحجوزات ديالي -->
+            <div class="card">
+                <h3 style="margin-top: 0; color: var(--text-main);">📌 Mes Réservations</h3>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    {% for res in my_reservations %}
+                    <div style="padding: 10px; border-bottom: 1px solid var(--border-color); font-size: 13px; display: flex; justify-content: space-between; align-items: center;">
+                        <div>
+                            <div style="font-weight: bold; color: var(--text-main);">{{ res.equipment.name }}</div>
+                            <div style="font-size: 11px; color: var(--text-muted);">Retour: {{ res.expected_return|date:"d M Y" }}</div>
+                        </div>
+                        <span style="font-weight: bold; font-size: 11px; padding: 3px 8px; border-radius: 6px; 
+                            {% if res.status == 'En attente' %} background: rgba(246, 173, 85, 0.1); color: #dd6b20; 
+                            {% elif res.status == 'Approuvé' %} background: rgba(56, 161, 105, 0.1); color: #38a169;
+                            {% else %} background: var(--border-color); color: var(--text-muted); {% endif %}">
+                            {{ res.status }}
+                        </span>
+                    </div>
+                    {% empty %}
+                    <p style="color: var(--text-muted); font-size: 12px;">Vous n'avez aucune réservation en cours.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

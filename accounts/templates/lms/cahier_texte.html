@@ -1,0 +1,41 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 20px;">
+    <div class="card" style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+            <h2 style="margin: 0; color: var(--text-main);">📖 Cahier de Texte - ISFP</h2>
+            <p style="margin: 5px 0 0 0; color: var(--text-muted); font-size: 13px;">Suivi des séances et des chapitres réalisés.</p>
+        </div>
+    </div>
+
+    {% if request.user.role == 'professeur' or request.user.is_superuser %}
+    <div class="card">
+        <h3 style="margin-top: 0; color: var(--text-main);">➕ Ajouter une séance</h3>
+        <form method="POST">
+            {% csrf_token %}
+            <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                <input type="text" name="title" placeholder="Titre de la leçon (ex: VLAN Configuration)" required style="flex: 2; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main);">
+                <input type="text" name="module" placeholder="Module (ex: Réseau)" required style="flex: 1; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main);">
+            </div>
+            <textarea name="content" placeholder="Détails du cours..." rows="3" required style="width: 100%; padding: 10px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--bg-body); color: var(--text-main); resize: none; box-sizing: border-box;"></textarea>
+            <button type="submit" style="margin-top: 10px; background: var(--accent); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer;">Publier la séance</button>
+        </form>
+    </div>
+    {% endif %}
+
+    <div style="display: flex; flex-direction: column; gap: 15px;">
+        {% for item in cahiers %}
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; margin-bottom: 10px;">
+                <h3 style="margin: 0; color: var(--accent);">{{ item.title }}</h3>
+                <span style="font-size: 12px; color: var(--text-muted); background: var(--bg-body); padding: 4px 10px; border-radius: 6px;">{{ item.date }}</span>
+            </div>
+            <div style="font-size: 13px; color: var(--text-muted); margin-bottom: 8px;"><b>Module:</b> {{ item.module }} | <b>Formateur:</b> {{ item.professor.username }}</div>
+            <p style="color: var(--text-main); font-size: 14px; line-height: 1.6; margin: 0;">{{ item.content }}</p>
+        </div>
+        {% empty %}
+        <div class="card" style="text-align: center; color: var(--text-muted);">Aucune séance enregistrée.</div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
