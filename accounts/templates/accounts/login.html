@@ -35,7 +35,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box;
             background-image: radial-gradient(circle at top right, rgba(74, 92, 255, 0.1), transparent 40%),
                               radial-gradient(circle at bottom left, rgba(246, 173, 85, 0.1), transparent 40%);
         }
@@ -49,6 +51,7 @@
             max-width: 400px;
             text-align: center;
             border: 1px solid var(--border-color);
+            margin: auto;
         }
 
         .login-logo { font-size: 55px; margin-bottom: 5px; }
@@ -87,6 +90,64 @@
         .alert { padding: 12px; border-radius: 10px; margin-bottom: 20px; font-size: 14px; font-weight: bold; }
         .alert-success { background: rgba(56, 161, 105, 0.1); color: #38a169; border: 1px solid rgba(56, 161, 105, 0.2); }
         .alert-error { background: rgba(229, 62, 62, 0.1); color: #e53e3e; border: 1px solid rgba(229, 62, 62, 0.2); }
+
+        .developer-credits {
+            margin-top: 25px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-muted);
+            font-size: 13px;
+            font-family: monospace;
+            line-height: 1.5;
+        }
+        .developer-credits p { margin: 4px 0; }
+        .developer-credits strong { color: var(--accent); letter-spacing: 0.5px; }
+        .heart { color: #e53e3e; font-size: 14px; }
+        
+        /* 🌟 التعديلات الخاصة بالتليفونات باش يتجمع كلشي 🌟 */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            .login-container { 
+                padding: 25px 20px; 
+            }
+            .login-logo { 
+                font-size: 45px; 
+            }
+            .login-title { 
+                font-size: 24px; 
+            }
+            .login-subtitle { 
+                margin-bottom: 20px; 
+            }
+            .form-group { 
+                margin-bottom: 15px; 
+            }
+            .form-control { 
+                padding: 12px; 
+            }
+            .btn-main { 
+                padding: 12px; 
+                margin-top: 5px; 
+            }
+            .extra-buttons { 
+                grid-template-columns: 1fr; 
+                gap: 8px; 
+                margin-top: 15px; 
+            }
+            .btn-outline { 
+                padding: 10px; 
+            }
+            .btn-register { 
+                padding: 12px; 
+                margin-top: 10px; 
+            }
+            .developer-credits { 
+                margin-top: 15px; 
+                padding-top: 10px; 
+            }
+        }
     </style>
 </head>
 <body>
@@ -104,7 +165,7 @@
         {% endif %}
 
         {% if form.errors %}
-            <div class="alert alert-error">⚠️ Identifiant incorrect, ou compte en attente d'approbation.</div>
+            <div class="alert alert-error">⚠️ Identifiant incorrect.</div>
         {% endif %}
 
         <form method="POST" action="{% url 'login' %}">
@@ -130,6 +191,13 @@
 
         <!-- بوطونة ديال إنشاء حساب -->
         <a href="{% url 'register' %}" class="btn-register">✨ Créer un nouveau compte</a>
+
+        <!-- 🌟 حقوق المطور 🌟 -->
+        <div class="developer-credits">
+            <p>Designed & Developed with <span class="heart">❤️</span> by <strong>Bilal Moubarek</strong></p>
+            <p style="font-size: 11px;">&copy; 2026 ID-Master. All rights reserved.</p>
+        </div>
+
     </div>
 
 </body>
