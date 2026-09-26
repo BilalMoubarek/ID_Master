@@ -1,13 +1,15 @@
 {% extends 'accounts/base.html' %}
 {% block content %}
-<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px;">
+<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; flex-wrap: wrap; gap: 15px;">
     <h2 style="margin: 0; color: var(--text-main);">🎓 Bienvenue sur votre espace, {{ request.user.first_name|default:request.user.username }} !</h2>
     <div style="background: var(--bg-card); border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 8px; font-weight: bold; color: var(--text-main);">
-        CEF: <span style="color: var(--accent);">{% if request.user.numero_cef %}{{ request.user.numero_cef }}{% else %}<a href="{% url 'settings' %}" style="color: #e53e3e; text-decoration: none;">Renseigner le CEF !</a>{% endif %}</span>
+        CEF: <span style="color: var(--accent);">{% if request.user.numero_cef %}{{ request.user.numero_cef %}{% else %}<a href="{% url 'settings' %}" style="color: #e53e3e; text-decoration: none;">Renseigner le CEF !</a>{% endif %}</span>
     </div>
 </div>
 
-<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+<!-- الكارطات الأساسية بوحدها بلا تخربيق -->
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;">
+    
     <!-- Accès aux cours -->
     <div class="card" style="text-align: center; padding: 40px; transition: 0.3s;">
         <h1 style="font-size: 50px; margin: 0 0 15px 0;">📚</h1>
@@ -23,5 +25,6 @@
         <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Suivez les dernières annonces, actualités et posts de votre établissement.</p>
         <a href="{% url 'feed' %}" style="display: inline-block; background: #38a169; color: white; padding: 12px 25px; border-radius: 8px; text-decoration: none; font-weight: bold;">Voir le mur</a>
     </div>
+
 </div>
 {% endblock %}

@@ -1,18 +1,29 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.db.models import Q
-from .models import CustomUser, Message, SiteSetting
-from lms.models import StudentRecord
-from django.db.models import Sum
-from django.db.models import Q
-from .models import CustomUser, SiteSetting, Message # تأكد بلي زدتي Message
+from django.db.models import Q, Sum
+from accounts.models import CustomUser, Message, SiteSetting
+from lms.models import Course, Announcement, StudentRecord
 from django.contrib import messages
-from django.contrib import messages
-from .forms import CustomUserCreationForm  # <--- هادا هو السطر اللي كان ناقص باش يطير الإيرور
+from .forms import CustomUserCreationForm
 import csv
 from django.http import HttpResponse
-from .models import CustomUser
-from .models import SiteSetting
+
+
+# الصفحة الرئيسية (مفتوحة للعموم - Public)
+def home_view(request):
+    # إيلا كان اليوزر مسجل دخول ديجا، نردوه للداشبورد ديالو نيشان
+    if request.user.is_authenticated:
+        return redirect('student_dashboard') if getattr(request.user, 'role', '') == 'etudiant' else redirect('dashboard')
+        
+    courses = Course.objects.all()[:4] # عينة من الدروس للعموم
+    announcements = Announcement.objects.all()[:5] # آخر الإعلانات
+    
+    context = {
+        'courses': courses,
+        'announcements': announcements,
+    }
+    # هنا عزلنا اسم الملف فـ templates (تأكد واش سميتو home.html ولا index.html فـ folders ديالك)
+    return render(request, 'accounts/home.html', context)
 
 def toggle_maintenance(request):
     if request.user.is_authenticated and request.user.is_superuser:
@@ -41,14 +52,13 @@ def feed_view(request):
     if request.method == 'POST':
         post_content = request.POST.get('post_content')
         if post_content:
-            # تقدر تكريي موديل Post ولا تخليه غير مؤقت حتى نزيدو الموديل ديالو
             messages.success(request, "🎉 Publication partagée avec succès sur le campus !")
             return redirect('feed')
             
     return render(request, 'accounts/feed.html')
 
 def export_stagiaires_csv(request):
-    if not request.user.is_authenticated or request.user.role == 'etudiant':
+    if not request.user.is_authenticated or getattr(request.user, 'role', '') == 'etudiant':
         return redirect('dashboard')
         
     response = HttpResponse(content_type='text/csv')
@@ -71,9 +81,8 @@ def register_view(request):
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save(commit=False)
-            user.is_active = False # هادي هي اللي كتحبسو حتى توافق عليه نتا
+            user.is_active = False # كيحبس الكونط حتى يوافق عليه الأدمين (بلال)
             user.save()
-            # هاد الميساج هو اللي غيطلع ليه فصفحة Login
             messages.success(request, "🎉 Inscription réussie ! Votre compte est en attente d'approbation par Bilal (Admin).")
             return redirect('login')
     else:
@@ -106,30 +115,20 @@ def save_grades(request):
                 rec.save()
     return redirect('dashboard')
 
-# تشغيل/إيقاف الصيانة من طرف الأدمين
-def toggle_maintenance(request):
-    if request.user.is_superuser or getattr(request.user, 'role', '') == 'admin':
-        setting, _ = SiteSetting.objects.get_or_create(id=1)
-        setting.is_maintenance = not setting.is_maintenance
-        setting.save()
-    return redirect('dashboard')
-
 def student_dashboard_view(request):
     if not request.user.is_authenticated or getattr(request.user, 'role', '') != 'etudiant': return redirect('dashboard')
     record, _ = StudentRecord.objects.get_or_create(student=request.user)
     return render(request, 'accounts/student_dashboard.html', {'record': record})
 
-# بدل هاد الجوج دوال فـ accounts/views.py
-
 def stagiaires_list(request):
     if not request.user.is_authenticated: return redirect('login')
     
-    # كنجيبو المتدربين، وكنزيدو ليهم حقل وهمي 'total_absences' كيجمع السوايع ديال الغياب كاملين
     stagiaires = CustomUser.objects.filter(role='etudiant').annotate(
         total_absences=Sum('absences__heures')
     )
 
     return render(request, 'accounts/stagiaires_list.html', {'stagiaires': stagiaires})
+
 def formateurs_list(request):
     if not request.user.is_authenticated: return redirect('login')
     formateurs = CustomUser.objects.filter(role='professor')
@@ -150,25 +149,18 @@ def settings_view(request):
 def messages_view(request, user_id=None):
     if not request.user.is_authenticated: return redirect('login')
     
-    # نجيبو كاع المستخدمين من غير راسنا
     users = CustomUser.objects.exclude(id=request.user.id)
-    
     active_chat_user = None
     chat_messages = []
     
     if user_id:
         active_chat_user = get_object_or_404(CustomUser, id=user_id)
-        
-        # نردّو الميساجات اللي وصلونا من هاد الشخص مقروئين (Vu)
         Message.objects.filter(sender=active_chat_user, receiver=request.user, is_read=False).update(is_read=True)
-        
-        # نجيبو الهضرة اللي بيناتنا بجوج (صادر و وارد) مرتبة بالوقت
         chat_messages = Message.objects.filter(
             (Q(sender=request.user) & Q(receiver=active_chat_user)) |
             (Q(sender=active_chat_user) & Q(receiver=request.user))
         ).order_by('timestamp')
         
-    # فاش يكتب شي ميساج ويصيفطو (POST)
     if request.method == 'POST' and active_chat_user:
         content = request.POST.get('content')
         if content:
@@ -180,4 +172,3 @@ def messages_view(request, user_id=None):
         'active_chat_user': active_chat_user,
         'chat_messages': chat_messages
     })
-

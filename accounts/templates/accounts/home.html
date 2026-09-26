@@ -1,0 +1,52 @@
+{% extends 'accounts/base.html' %}
+{% block content %}
+<div style="text-align: center; padding: 60px 20px;">
+    <h1 style="font-size: 42px; color: var(--text-main); margin-bottom: 15px; font-weight: 800;">🚀 Bienvenue sur ID-Master ISFP</h1>
+    <p style="color: var(--text-muted); font-size: 18px; max-width: 650px; margin: 0 auto 35px auto; line-height: 1.6;">
+        Plateforme numérique officielle pour la gestion des infrastructures digitales, le suivi académique et l'accès aux ressources pédagogiques.
+    </p>
+
+    <!-- غير جوج أزرار رئيسية فقط للزوار (بناءً على طلبك) -->
+    <div style="display: flex; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <a href="{% url 'login' %}" style="background: var(--accent); color: white; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.3s;">Se Connecter</a>
+        <a href="{% url 'register' %}" style="background: #38a169; color: white; padding: 14px 32px; border-radius: 10px; text-decoration: none; font-weight: bold; font-size: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.3s;">S'inscrire</a>
+    </div>
+</div>
+
+<!-- قسم مبسط جداً يظهر للعموم يحتوي فقط على العناوين العامة -->
+<div style="margin-top: 40px; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; max-width: 900px; margin-left: auto; margin-right: auto;">
+    
+    <!-- قسم مبسط للدروس المتاحة للعموم (يشوفوه غير جوج بوطونات) -->
+    <div class="card" style="padding: 30px; text-align: center;">
+        <div style="font-size: 40px; margin-bottom: 15px;">📚</div>
+        <h3 style="color: var(--text-main); margin-top: 0; margin-bottom: 10px;">Espace Cours & TPs</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Consultez les modules de formation en Infrastructure Digitale.</p>
+        {% if courses %}
+            <ul style="color: var(--text-muted); text-align: left; display: inline-block; padding-left: 15px; margin-bottom: 0; font-size: 14px;">
+                {% for course in courses %}
+                    <li>{{ course.title }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p style="color: var(--text-muted); font-size: 13px;">Connectez-vous pour accéder à l'intégralité des cours.</p>
+        {% endif %}
+    </div>
+
+    <!-- قسم الإعلانات العامة المختصرة -->
+    <div class="card" style="padding: 30px; text-align: center;">
+        <div style="font-size: 40px; margin-bottom: 15px;">📢</div>
+        <h3 style="color: var(--text-main); margin-top: 0; margin-bottom: 10px;">Annonces Officielles</h3>
+        <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 20px;">Restez informés des dernières actualités de l'établissement.</p>
+        {% if announcements %}
+            <ul style="color: var(--text-muted); text-align: left; display: inline-block; padding-left: 15px; margin-bottom: 0; font-size: 14px;">
+                {% for ann in announcements %}
+                    <li>{{ ann.title }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p style="color: var(--text-muted); font-size: 13px;">Aucune annonce récente pour les visiteurs.</p>
+        {% endif %}
+    </div>
+
+</div>
+{% endblock %}

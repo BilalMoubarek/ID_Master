@@ -2,7 +2,7 @@ from django.urls import path
 from .views import (
     courses_list, upload_course, delete_course, feed_view, delete_announcement, 
     emploi_view, resultats_view, stages_view, upload_scolarite, delete_scolarite,
-    mark_notifications_read, add_absence, cahier_texte_view, qr_presence_view, 
+    mark_notifications_read, add_absence, cahier_texte_view, 
     bibliotheque_view, support_tickets_view, attestation_view, projets_view,
     
     # هاهما اللي زدنا دابا ديال المنتدى
@@ -22,9 +22,7 @@ urlpatterns = [
     path('resultats-examens/', resultats_view, name='resultats'),
     path('espace-stages/', stages_view, name='stages'),
 
-    path('cahier-texte/', cahier_texte_view, name='cahier_texte'),
-    path('qr-presence/', qr_presence_view, name='qr_presence'),
-    path('bibliotheque/', bibliotheque_view, name='bibliotheque'),
+    path('cahier-texte/', cahier_texte_view, name='cahier_texte'),    path('bibliotheque/', bibliotheque_view, name='bibliotheque'),
     path('support/', support_tickets_view, name='support_tickets'),
     path('projets/', projets_view, name='projets_stagiaires'),
 

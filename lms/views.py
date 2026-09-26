@@ -158,10 +158,6 @@ def attestation_view(request):
     }
     return render(request, 'lms/attestation.html', context)
 
-# صفحة QR Code الحضور
-def qr_presence_view(request):
-    return render(request, 'lms/qr_presence.html')
-
 # صفحة مكتبة الكتب
 def bibliotheque_view(request):
     return render(request, 'lms/bibliotheque.html')
