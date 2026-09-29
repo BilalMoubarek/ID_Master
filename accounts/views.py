@@ -7,7 +7,7 @@ from django.contrib import messages
 from .forms import CustomUserCreationForm
 import csv
 from django.http import HttpResponse
-
+from rest_framework.decorators import api_view
 
 # الصفحة الرئيسية (مفتوحة للعموم - Public)
 def home_view(request):

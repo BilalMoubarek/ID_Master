@@ -19,6 +19,17 @@ from .models import StudentScore
 from accounts.models import CustomUser
 from django.db.models import Q
 from .models import Course, ForumQuestion, ProjetStagiaire
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+
+@api_view(['GET'])
+def api_overview(request):
+    data = {
+        "status": "success",
+        "message": "Welcome to ID_Master High-Performance API!",
+        "architecture": "3-Tier API-First / Serverless Ready"
+    }
+    return Response(data)
 
 def global_search_view(request):
     if not request.user.is_authenticated: return redirect('login')
